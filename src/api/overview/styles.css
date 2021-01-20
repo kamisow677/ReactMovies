@@ -1,0 +1,25 @@
+.carousel-control-prev-icon {
+    margin-right: 100px;
+}
+.carousel-control-next-icon {
+    margin-left: 100px;
+}
+
+.carousel-control-next-icon:after
+{
+  content: '>';
+  font-size: 85px;
+  color: black;
+}
+
+.carousel-control-prev-icon:after {
+  content: '<';
+  font-size: 85px;
+  color: black;
+}
+
+.my-carousel {
+    width: 80%;
+    text-align: center;
+    float: center;
+}
