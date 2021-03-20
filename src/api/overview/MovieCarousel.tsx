@@ -6,6 +6,7 @@ interface Movie {
     id: string,
     title: string,
     year: string,
+    image: string,
     upflixesCount: number 
 }
 
@@ -40,11 +41,11 @@ export default class MovieCarousel extends React.Component <MovieCarouselProps, 
 
         this.props.movies.forEach((value, index) => {
             console.log(index/2)
-
             moviesCarousel[Math.floor(index/2)].push({ 
                 id: value.id,
                 title: value.title,
                 year: value.year,
+                image: value.image,
                 upflixesCount: 2
             })
         });
@@ -55,10 +56,12 @@ export default class MovieCarousel extends React.Component <MovieCarouselProps, 
                 id: 'value.id',
                 title: 'value.title',
                 year: 'value.year',
+                image: 'image.year',
                 upflixesCount: 2
             })
         }
 
+        console.log("moviecarousle")
         console.log(moviesCarousel)
 
         return (
@@ -66,7 +69,7 @@ export default class MovieCarousel extends React.Component <MovieCarouselProps, 
                     {
                         moviesCarousel.map(
                             list => 
-                                <Carousel.Item interval={20000}  className="my-carousel-item">
+                                <Carousel.Item interval={20000}  className="my-carousel">
                                     <Container >
                                         <Row>
                                             <Col sm={12}>

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Table, Card, DropdownButton, Dropdown, FormControl, Button} from 'react-bootstrap';
 import AuthorizationService from './AuthorizationService';
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 
 class AllDataLookup extends React.Component {
 
@@ -120,7 +120,7 @@ class AllDataLookup extends React.Component {
               this.state.upflixes.map(
                 upflix => 
                   <tr onClick={this.handleClick.bind(this, upflix)}>
-                    <td>{upflix.link}</td>
+                    <td><Link>{upflix.link}</Link></td>
                     <td>{upflix.siteName}</td>
                     <td>{upflix.distributionChoice}</td>
                     <td>{upflix.count}</td>

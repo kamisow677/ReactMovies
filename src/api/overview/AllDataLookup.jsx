@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import MovieCarousel from './MovieCarousel.tsx'
-import { Card, CardColumns, ListGroup, Button} from 'react-bootstrap';
+import { Card, CardColumns, ListGroup, Button, Spinner, Images } from 'react-bootstrap';
 import AuthorizationService from '../AuthorizationService';
 
 export default class AllDataLookup extends React.Component {
@@ -14,7 +14,9 @@ export default class AllDataLookup extends React.Component {
       movies: [],
       upflixes: [],
       currentChoosenMovie: '',
-      movieChoosen: false
+      movieChoosen: false,
+      imageWidth: 0,
+      uploading: false
     };
   }
 
@@ -27,8 +29,8 @@ export default class AllDataLookup extends React.Component {
     var movieBig = this.state.movies.filter(one => one.id === movie.id);
     this.setState({upflixes: movieBig[0].upflixes });
     this.setState({movieChoosen: true});
+    console.log(movie);
   }
-
 
   componentDidMount() {
       axios(
@@ -45,24 +47,60 @@ export default class AllDataLookup extends React.Component {
       .then(res => {
           const movies = res.data;
           this.setState({ movies });
-          console.log(movies)
       })
+
   }
 
+  onChange = e => {
+
+
+    this.setState({ uploading: true })
+    const formData = new FormData()
+    formData.append('files',  e.target.files[0])
+
+    console.log(formData)
+    console.log( `http://localhost:8080/movie/image?title=`+this.state.currentChoosenMovie.title)
+
+    axios(
+      { 
+          headers: { "Content-Type": "multipart/form-data" },
+          method: `POST`,
+          url: `http://localhost:8080/movie/image?title=`+this.state.currentChoosenMovie.title,
+          auth: {
+              username: AuthorizationService.getUsername(),
+              password: AuthorizationService.getPassword()
+          },
+          data: formData
+      } 
+    )
+    .then(res => {
+      this.setState({ 
+        uploading: false
+      })
+    })
+    
+    this.componentDidMount()
+  }
 
   render() {
     return (
-      <Card> 
+      <Card >
         {this.state.movieChoosen 
-          ? <Card bg='light' className="card-deck">
+          ? <Card bg='light' className="card-deck" style={{ width: '30rem' }}>
               <Card.Body >
-                  <Card.Img variant="top" src="C:\Users\ksowa\OneDrive\Pulpit\asd.jpg" alt="First slide" />
                   <Card.Title>{this.state.currentChoosenMovie.title}</Card.Title>
+                  <Card.Img variant="top" src={"data:image/png;base64,"+ this.state.currentChoosenMovie.image}  alt="First  slide" />
                   <Card.Text>
                       {this.state.currentChoosenMovie.description}
                   </Card.Text>
                   <ListGroup className="list-group-flush" variant="flush">
                       <ListGroup.Item>Year: {this.state.currentChoosenMovie.year}</ListGroup.Item>
+                      <div className='button'>
+                        {this.state.uploading 
+                          ? <Spinner />
+                          : <input type='file' id='multi' onChange={this.onChange} multiple /> 
+                        }
+                      </div> 
                   </ListGroup>
                   <Card.Footer>
                     <Button onClick={this.goBackToCarousel} >
